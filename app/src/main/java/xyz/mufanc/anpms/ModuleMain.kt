@@ -10,7 +10,6 @@ import io.github.libxposed.api.XposedModule
 import io.github.libxposed.api.XposedModuleInterface
 import io.github.libxposed.api.annotations.BeforeInvocation
 import io.github.libxposed.api.annotations.XposedHooker
-import org.joor.Reflect
 import rikka.hidden.compat.PackageManagerApis
 import xyz.mufanc.anpms.hiddenapi.NotificationManagerApis
 import xyz.mufanc.anpms.hiddenapi.TokenWrapper
@@ -65,7 +64,7 @@ class ModuleMain(
             fun handle(callback: BeforeHookCallback): OnMediaDataLoadedHook? {
                 val data = callback.args.filterIsInstance(MediaData::class.java).first()
 
-                val token = TokenWrapper(Reflect.on(data).get("token"))
+                val token = TokenWrapper(data.token)
 
                 val uid = token.mUid
                 val pkg = PackageManagerApis.getPackagesForUid(uid)?.firstOrNull()
