@@ -5,16 +5,24 @@ plugins {
     alias(libs.plugins.hiddenapi.refine)
 }
 
+val androidMinSdkVersion: Int by rootProject.extra
+val androidTargetSdkVersion: Int by rootProject.extra
+val androidCompileSdkVersion: Int by rootProject.extra
+
+val androidSourceCompatibility: JavaVersion by rootProject.extra
+val androidTargetCompatibility: JavaVersion by rootProject.extra
+val androidKotlinJvmTarget: String by rootProject.extra
+
 android {
     namespace = "xyz.mufanc.anpms"
-    compileSdk = 34
+    compileSdk = androidCompileSdkVersion
 
     defaultConfig {
         applicationId = "xyz.mufanc.anpms"
-        minSdk = 33
-        targetSdk = 34
+        minSdk = androidMinSdkVersion
+        targetSdk = androidTargetSdkVersion
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1"
     }
 
     buildTypes {
@@ -25,12 +33,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = androidSourceCompatibility
+        targetCompatibility = androidTargetCompatibility
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = androidKotlinJvmTarget
     }
 }
 
@@ -44,6 +52,7 @@ dependencies {
     implementation(libs.autox.annotation)
 
     // Hidden Api
+    compileOnly(project(":api-stub"))
     compileOnly(libs.hiddenapi.stub)
     implementation(libs.hiddenapi.compat)
     implementation(libs.joor)

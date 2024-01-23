@@ -27,3 +27,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "anpms"
 include(":app")
+include(":api-stub")
