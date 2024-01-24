@@ -13,6 +13,7 @@ import io.github.libxposed.api.annotations.XposedHooker
 import rikka.hidden.compat.PackageManagerApis
 import xyz.mufanc.anpms.hiddenapi.NotificationManagerApis
 import xyz.mufanc.anpms.hiddenapi.TokenWrapper
+import xyz.mufanc.anpms.util.ArtHelper
 import xyz.mufanc.anpms.util.MagicClassLoader
 import xyz.mufanc.anpms.util.findMethod
 import xyz.mufanc.autox.annotation.XposedEntry
@@ -58,6 +59,10 @@ class ModuleMain(
     @XposedHooker
     class OnMediaDataLoadedHook : XposedInterface.Hooker {
         companion object {
+
+            private val sArtwork = MediaData::class.java.getDeclaredField("artwork")
+                .apply { ArtHelper.markNonfinal(this) }
+
             @BeforeInvocation
             @JvmStatic
             @Suppress("Unused")
@@ -70,7 +75,9 @@ class ModuleMain(
                 val pkg = PackageManagerApis.getPackagesForUid(uid)?.firstOrNull()
 
                 if (pkg != null && !NotificationManagerApis.areNotificationsEnabledForPackage(pkg, uid)) {
-                    callback.returnAndSkip(null)
+//                    callback.returnAndSkip(null)
+                    sArtwork.set(data, null)
+
                     Log.i(TAG, "package `$pkg` has no permission to post notifications, skip.")
                 }
 
