@@ -46,7 +46,7 @@ class OnMediaDataLoadedHook : XposedInterface.Hooker {
             val data = callback.args.filterIsInstance(MediaData::class.java).first()
             val token = TokenWrapper(data.token)
 
-            if (isNotificationAllowed(token.mUid)) {
+            if (!isNotificationAllowed(token.mUid)) {
 //                    callback.returnAndSkip(null)
                 sArtwork.set(data, null)
 
@@ -75,7 +75,7 @@ class OnMediaDataLoadedHook : XposedInterface.Hooker {
                 return@run NotificationManagerApis.areNotificationsEnabledForPackage(pkg, uid)
             }
 
-            Log.i(TAG, "check permission for uid $uid (cached=$cached)")
+            Log.i(TAG, "check permission for uid $uid => $allowed (cached=$cached)")
 
             if (!cached) {
                 mPermissionCache[uid] = allowed
